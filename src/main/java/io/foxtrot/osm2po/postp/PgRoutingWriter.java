@@ -209,9 +209,15 @@ public class PgRoutingWriter implements PostProcessor {
         log.info(DF(n) + " Segments written.");
 
         os.write(("\n"
+                + "ALTER TABLE " + tableName + " ADD COLUMN geog_way GEOGRAPHY(LINESTRING, 4326);\n"
+                + "UPDATE " + tableName + " SET geog_way = geom_way::geography;\n"
+                 ).getBytes());
+
+        os.write(("\n"
                 + "ALTER TABLE " + tableName + " ADD CONSTRAINT pkey_" + tableName + " PRIMARY KEY(id);\n"
                 + "CREATE INDEX idx_" + tableName + "_source ON " + tableName + "(source);\n"
                 + "CREATE INDEX idx_" + tableName + "_target ON " + tableName + "(target);\n"
+                + "CREATE INDEX idx_" + tableName + "_geog_way ON " + tableName + " USING GIST (geog_way);\n"
                 + "-- CREATE INDEX idx_" + tableName + "_osm_source_id ON " + tableName + "(osm_source_id);\n"
                 + "-- CREATE INDEX idx_" + tableName + "_osm_target_id ON " + tableName + "(osm_target_id);\n"
                 + "-- CREATE INDEX idx_" + tableName + "_geom_way ON " + tableName
