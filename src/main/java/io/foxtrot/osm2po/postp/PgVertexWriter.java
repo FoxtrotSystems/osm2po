@@ -50,8 +50,8 @@ public class PgVertexWriter implements PostProcessor {
         String prefix = config.getPrefix();
         Log log = config.getLog();
 
-        String tableName = (prefix + "_2po_vertex").toLowerCase(); // Postgres-Problem
-        String fileName = prefix + "_2po_vertex.sql";
+        String tableName = (prefix + "_vertices").toLowerCase(); // Postgres-Problem
+        String fileName = prefix + "_vertices.sql";
 
         File vertexInFile = new File(dir, Segmenter.VERTICES_FILENAME);
         if (!vertexInFile.exists()) {
@@ -149,9 +149,15 @@ public class PgVertexWriter implements PostProcessor {
 
         log.info(DF(n) + " Vertices written.");
 
+        os.write(("\n"
+                + "ALTER TABLE " + tableName + " ADD COLUMN geog_vertex GEOGRAPHY(POINT, 4326);\n"
+                + "UPDATE " + tableName + " SET geog_vertex = geom_vertex::geography;\n"
+                 ).getBytes());
+
         os.write(("\n\n"
                 + "ALTER TABLE " + tableName + " ADD CONSTRAINT pkey_" + tableName + " PRIMARY KEY(id);\n"
                 + "CREATE INDEX idx_" + tableName + "_osm_id ON " + tableName + "(osm_id);\n"
+                + "CREATE INDEX idx_" + tableName + "_geog_vertex ON " + tableName + " USING GIST (geog_vertex);\n"
                 + "-- CREATE INDEX idx_" + tableName + "_geom_vertex ON " + tableName
                 + " USING GIST (geom_vertex);\n").getBytes());
 
