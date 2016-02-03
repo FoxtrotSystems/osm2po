@@ -6,3 +6,5 @@
 !pom.xml
 !src/main/java/io/foxtrot/osm2po/postp/*
 !lib/osm2po-core-5.1.0-signed.jar
+!osm2po-plugins/osm2po-plugins-5.1.0.jar
+!osm2po-plugins/osm2po-sd-5.1.0.jar
