@@ -1,0 +1,16 @@
+target
+Procfile~
+.idea
+*.iml
+out/
+.env
+.DS_Store
+dump.rdb
+javadocs
+lib/
+.stagingenv
+
+# eclipse ignores
+.classpath
+.project
+.settings/
