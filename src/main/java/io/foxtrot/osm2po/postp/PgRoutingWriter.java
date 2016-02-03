@@ -86,8 +86,8 @@ public class PgRoutingWriter implements PostProcessor {
         this.asMultilineString = Boolean.valueOf(
                 config.getProperty(key, "false"));
 
-        String tableName = (prefix + "_2po_4pgr").toLowerCase(); // Postgres-Problem
-        String fileName = prefix + "_2po_4pgr.sql";
+        String tableName = (prefix + "_osm_edges").toLowerCase(); // Postgres-Problem
+        String fileName = prefix + "_osm_edges.sql";
 
         File waysInFile = new File(dir, Segmenter.SEGMENTS_FILENAME);
         if (!waysInFile.exists()) {
@@ -133,8 +133,8 @@ public class PgRoutingWriter implements PostProcessor {
                 + "source integer, target integer, "
                 + "km double precision, kmh integer, "
                 + "cost double precision, reverse_cost double precision, "
-                + "x1 double precision, y1 double precision, "
-                + "x2 double precision, y2 double precision"
+                + "source_longitude double precision, source_latitude double precision, "
+                + "target_longitude double precision, target_latitude double precision"
                 + ");\n"
                 + "SELECT AddGeometryColumn('" + tableName + "', "
                 + "'geom_way', 4326, '" + lineformat + "', 2);\n")
@@ -154,7 +154,9 @@ public class PgRoutingWriter implements PostProcessor {
             byte[] metaSql = toUTF8QuotedSqlBytes(way.getMeta(), true);
 
             int kmh = way.getKmh();
-            if (kmh <= 0) kmh = 1;
+            if (kmh <= 0) {
+                kmh = 1;
+            }
             boolean isOneWay = way.isOneWay();
 
             for (int i = 0; i < way.getSegments().length; i++) {
@@ -181,8 +183,11 @@ public class PgRoutingWriter implements PostProcessor {
                     os.write(NEWLINE);
                     g = 0;
                 }
-                if (++g == 1) os.write(INSERT);
-                else os.write(KOMMA);
+                if (++g == 1) {
+                    os.write(INSERT);
+                } else {
+                    os.write(KOMMA);
+                }
                 os.write(NEWLINE);
 
                 os.write(("(" + id + ", " + osm_id + ", ").getBytes());
