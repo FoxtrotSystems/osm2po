@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.foxtrot</groupId>
   <version>1.0</version>
-  <artifactId>foxtrot</artifactId>
+  <artifactId>foxtrot-osm2po-plugins</artifactId>
   <properties>
     <downloadsources>true</downloadsources>
     <maven.compiler.target>1.8</maven.compiler.target>
