@@ -6,6 +6,30 @@
   <groupId>io.foxtrot</groupId>
   <version>1.0</version>
   <artifactId>foxtrot-osm2po-plugins</artifactId>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.6</version>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
   <properties>
     <downloadsources>true</downloadsources>
     <maven.compiler.target>1.8</maven.compiler.target>
@@ -13,6 +37,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <geotools.version>14.2</geotools.version>
   </properties>
+
   <dependencies>
     <dependency>
       <groupId>de</groupId>
@@ -38,6 +63,7 @@
       <version>${geotools.version}</version>
     </dependency>
   </dependencies>
+
   <repositories>
     <repository>
       <id>maven2-repository.dev.java.net</id>
@@ -63,4 +89,5 @@
       <url>http://repo.boundlessgeo.com/main</url>
     </repository>
   </repositories>
+
 </project>
