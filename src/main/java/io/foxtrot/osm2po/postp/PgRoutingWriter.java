@@ -31,6 +31,7 @@ import de.cm.osm2po.model.WaySegment;
 import de.cm.osm2po.primitives.InStream;
 import de.cm.osm2po.primitives.InStreamDisk;
 import de.cm.osm2po.primitives.VarTypeDesk;
+import org.geotools.referencing.GeodeticCalculator;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -52,6 +53,27 @@ public class PgRoutingWriter implements PostProcessor {
     private static final byte NEWLINE = '\n';
 
     private boolean asMultilineString;
+
+    private double computeDistanceKm(WaySegment segment) {
+        double meters = 0.0D;
+
+        Node[] nodes = segment.getNodes();
+        GeodeticCalculator distanceCalc = new GeodeticCalculator();
+
+        if (nodes.length > 1) {
+            Node ndFrom = nodes[0];
+
+            for (int i = 1; i < nodes.length; ++i) {
+                Node ndTo = nodes[i];
+                distanceCalc.setStartingGeographicPoint(ndFrom.getLon(), ndFrom.getLat());
+                distanceCalc.setDestinationGeographicPoint(ndTo.getLon(), ndTo.getLat());
+                meters += distanceCalc.getOrthodromicDistance();
+                ndFrom = ndTo;
+            }
+        }
+
+        return meters / 1000.0;
+    }
 
     @Override
     public void run(Config config, int index) throws Exception {
@@ -144,7 +166,7 @@ public class PgRoutingWriter implements PostProcessor {
                 Node n2 = waySegment.getNodes()[waySegment.getNodes().length - 1];
                 long osmSourceId = n1.getId();
                 long osmTargetId = n2.getId();
-                double km = roundE7(waySegment.calcLengthKm());
+                double km = roundE7(computeDistanceKm(waySegment));
                 double cost = roundE7(km / kmh);
                 double reverse_cost = isOneWay ? 1000000d : cost;
 
