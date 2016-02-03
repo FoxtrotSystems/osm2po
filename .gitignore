@@ -1,16 +1,8 @@
-target
-Procfile~
-.idea
-*.iml
-out/
-.env
-.DS_Store
-dump.rdb
-javadocs
-lib/
-.stagingenv
-
-# eclipse ignores
-.classpath
-.project
-.settings/
+*
+!.gitignore
+!LICENSE
+!osm2po.config
+!osm2po.sh
+!pom.xml
+!src/main/java/io/foxtrot/osm2po/postp/*
+!lib/osm2po-core-5.1.0-signed.jar
